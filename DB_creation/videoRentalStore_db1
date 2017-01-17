@@ -1,0 +1,62 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+DROP SCHEMA IF EXISTS `video_rental_store` ;
+CREATE SCHEMA IF NOT EXISTS `video_rental_store` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `video_rental_store` ;
+
+-- -----------------------------------------------------
+-- Table `video_rental_store`.`customers`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `video_rental_store`.`customers` ;
+
+CREATE TABLE IF NOT EXISTS `video_rental_store`.`customers` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `bonus_points` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `video_rental_store`.`films`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `video_rental_store`.`films` ;
+
+CREATE TABLE IF NOT EXISTS `video_rental_store`.`films` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `film_type` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `video_rental_store`.`rentals`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `video_rental_store`.`rentals` ;
+
+CREATE TABLE IF NOT EXISTS `video_rental_store`.`rentals` (
+  `customers_id` INT NOT NULL,
+  `films_id` INT NOT NULL,
+  `date_rented` DATE NOT NULL,
+  `date_returned` DATE NOT NULL,
+  `price` FLOAT NOT NULL,
+  PRIMARY KEY (`customers_id`, `films_id`),
+  INDEX `fk_customers_has_films_films1_idx` (`films_id` ASC),
+  INDEX `fk_customers_has_films_customers_idx` (`customers_id` ASC),
+  CONSTRAINT `fk_customers_has_films_customers`
+    FOREIGN KEY (`customers_id`)
+    REFERENCES `video_rental_store`.`customers` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_customers_has_films_films1`
+    FOREIGN KEY (`films_id`)
+    REFERENCES `video_rental_store`.`films` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
