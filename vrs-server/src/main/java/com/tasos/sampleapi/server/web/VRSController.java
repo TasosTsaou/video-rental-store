@@ -2,6 +2,9 @@ package com.tasos.sampleapi.server.web;
 
 import javax.validation.Valid;
 
+import com.tasos.sampleapi.server.services.CustomerManagementService;
+import com.tasos.sampleapi.server.services.FilmManagementService;
+import com.tasos.sampleapi.server.services.RentalManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,7 @@ import com.tasos.sampleapi.common.dataobjects.RentalListDTO;
 import com.tasos.sampleapi.common.dataobjects.RentalResultDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsResultDTO;
-import com.tasos.sampleapi.server.sampleapi.CustomerManagementService;
-import com.tasos.sampleapi.server.sampleapi.FilmManagementService;
-import com.tasos.sampleapi.server.sampleapi.RentalManagementService;
+
 import com.tasos.common.constants.Constants;
 
 @RestController

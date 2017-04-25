@@ -1,4 +1,4 @@
-package com.tasos.sampleapi.server.sampleapi;
+package com.tasos.sampleapi.server.services;
 
 import com.tasos.sampleapi.common.dataobjects.FilmDTO;
 

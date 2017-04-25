@@ -14,6 +14,9 @@ import org.joda.time.DateTime;
 
 import com.tasos.sampleapi.common.dataobjects.RentalDTO;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  * @author tasos
  */
@@ -40,12 +43,10 @@ public class Rental {
     private Film film;
 
     @Column(name = "date_rented", columnDefinition = "datetime")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime dateRented;
+    private LocalDateTime dateRented;
 
     @Column(name = "return_date", columnDefinition = "datetime")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime dateReturned;
+    private LocalDateTime dateReturned;
 
     @Column(name = "price", columnDefinition = "FLOAT")
     private Double price;
@@ -72,19 +73,19 @@ public class Rental {
         this.film = film;
     }
 
-    public DateTime getDateRented() {
+    public LocalDateTime getDateRented() {
         return dateRented;
     }
 
-    public void setDateRented(DateTime dateRented) {
+    public void setDateRented(LocalDateTime dateRented) {
         this.dateRented = dateRented;
     }
 
-    public DateTime getDateReturned() {
+    public LocalDateTime getDateReturned() {
         return dateReturned;
     }
 
-    public void setDateReturned(DateTime dateReturned) {
+    public void setDateReturned(LocalDateTime dateReturned) {
         this.dateReturned = dateReturned;
     }
 

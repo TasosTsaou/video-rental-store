@@ -2,6 +2,8 @@ package com.tasos.sampleapi.common.dataobjects;
 
 import org.joda.time.DateTime;
 
+import java.time.LocalDateTime;
+
 public class RentalDTO {
 
     private Integer id;
@@ -10,9 +12,9 @@ public class RentalDTO {
 
     private Integer filmId;
 
-    private DateTime dateRented;
+    private LocalDateTime dateRented;
 
-    private DateTime dateReturned;
+    private LocalDateTime dateReturned;
 
     private Double price;
     
@@ -38,19 +40,19 @@ public class RentalDTO {
         this.filmId = filmId;
     }
 
-    public DateTime getDateRented() {
+    public LocalDateTime getDateRented() {
         return dateRented;
     }
 
-    public void setDateRented(DateTime dateRented) {
+    public void setDateRented(LocalDateTime dateRented) {
         this.dateRented = dateRented;
     }
 
-    public DateTime getDateReturned() {
+    public LocalDateTime getDateReturned() {
         return dateReturned;
     }
 
-    public void setDateReturned(DateTime dateReturned) {
+    public void setDateReturned(LocalDateTime dateReturned) {
         this.dateReturned = dateReturned;
     }
 

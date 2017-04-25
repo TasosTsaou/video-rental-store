@@ -1,9 +1,11 @@
-package com.tasos.sampleapi.server.sampleapi.impl;
+package com.tasos.sampleapi.server.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.tasos.sampleapi.server.services.RentalManagementService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,6 @@ import com.tasos.sampleapi.server.domain.repositories.CustomerRepository;
 import com.tasos.sampleapi.server.domain.repositories.FilmRepository;
 import com.tasos.sampleapi.server.domain.repositories.RentalRepository;
 import com.tasos.sampleapi.server.helpers.RentalCalculationsHelper;
-import com.tasos.sampleapi.server.sampleapi.RentalManagementService;
 
 @Service
 public class RentalManagementServiceImpl implements RentalManagementService {
@@ -118,8 +119,8 @@ public class RentalManagementServiceImpl implements RentalManagementService {
     }
 
     @Override
-    public ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, DateTime returnDate) {
-        // List<Film> returnedFilms = filmRepo.findByIdIn(returnedFilmIds);
+    public ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, LocalDateTime returnDate) {
+
         List<Rental> rentals = rentalRepo.findByFilmIdAndCustomerIdAndReturned(returnedFilmIds, customerId, false);
         double totalSurcharges = rentals.stream().map(rental -> {
             Film returnedFilm = filmRepo.findById(rental.getFilm().getId());

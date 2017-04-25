@@ -1,5 +1,6 @@
-package com.tasos.sampleapi.server.sampleapi.impl;
+package com.tasos.sampleapi.server.services.impl;
 
+import com.tasos.sampleapi.server.services.FilmManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -9,7 +10,7 @@ import com.tasos.sampleapi.common.dataobjects.FilmDTO;
 import com.tasos.sampleapi.server.domain.entities.Customer;
 import com.tasos.sampleapi.server.domain.entities.Film;
 import com.tasos.sampleapi.server.domain.repositories.FilmRepository;
-import com.tasos.sampleapi.server.sampleapi.FilmManagementService;
+
 
 @Service
 public class FilmManagementServiceImpl implements FilmManagementService {

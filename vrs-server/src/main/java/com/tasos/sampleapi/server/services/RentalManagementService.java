@@ -1,14 +1,12 @@
-package com.tasos.sampleapi.server.sampleapi;
-
-import java.util.List;
-import java.util.Set;
-
-import org.joda.time.DateTime;
+package com.tasos.sampleapi.server.services;
 
 import com.tasos.sampleapi.common.dataobjects.RentalDTO;
 import com.tasos.sampleapi.common.dataobjects.RentalResultDTO;
-import com.tasos.sampleapi.common.dataobjects.ReturnFilmsDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsResultDTO;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author tasos
@@ -31,6 +29,6 @@ public interface RentalManagementService {
 
     RentalResultDTO rentFilms(List<RentalDTO> filmsList);
 
-    ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, DateTime returnDate);
+    ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, LocalDateTime returnDate);
 
 }

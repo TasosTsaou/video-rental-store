@@ -1,8 +1,9 @@
 /**
  * 
  */
-package com.tasos.sampleapi.server.sampleapi.impl;
+package com.tasos.sampleapi.server.services.impl;
 
+import com.tasos.sampleapi.server.services.CustomerManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -10,7 +11,7 @@ import org.springframework.util.Assert;
 import com.tasos.sampleapi.common.dataobjects.CustomerDTO;
 import com.tasos.sampleapi.server.domain.entities.Customer;
 import com.tasos.sampleapi.server.domain.repositories.CustomerRepository;
-import com.tasos.sampleapi.server.sampleapi.CustomerManagementService;
+
 
 /**
  * @author tasos
