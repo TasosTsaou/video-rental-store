@@ -1,6 +1,6 @@
 package com.tasos.sampleapi.common.dataobjects;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 
 public class ReturnFilmsDTO {
@@ -9,7 +9,7 @@ public class ReturnFilmsDTO {
 
     private int customerId;
 
-    private LocalDateTime returnDate;
+    private Instant returnDate;
 
     public ReturnFilmsDTO() {
 
@@ -31,11 +31,11 @@ public class ReturnFilmsDTO {
         this.customerId = customerId;
     }
 
-    public LocalDateTime getReturnDate() {
+    public Instant getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(LocalDateTime returnDate) {
+    public void setReturnDate(Instant returnDate) {
         this.returnDate = returnDate;
     }
 

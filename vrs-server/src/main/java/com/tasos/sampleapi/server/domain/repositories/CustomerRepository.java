@@ -3,12 +3,14 @@ package com.tasos.sampleapi.server.domain.repositories;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.tasos.sampleapi.server.domain.entities.Customer;
+import org.springframework.stereotype.Repository;
 
 /**
  * This interface is used to automatically create the implementation of the
  * CustomerRepository (DAO) and includes the CRUD operations inherited by
  * JpaRepository as well as the defined custom queries.
  */
+@Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
 
     /**

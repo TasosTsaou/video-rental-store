@@ -6,7 +6,9 @@ import java.util.Set;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.tasos.sampleapi.server.domain.entities.Film;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FilmRepository extends PagingAndSortingRepository<Film, Integer> {
 
     /**

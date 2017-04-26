@@ -3,13 +3,17 @@ package com.tasos.sampleapi.integration.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.time.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
+
+import com.tasos.sampleapi.integration.config.VRSClientTestingConfig;
+import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,11 +23,15 @@ import org.neo4j.cypher.internal.compiler.v2_1.executionplan.addEagernessIfNeces
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.OutputCapture;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.tasos.sampleapi.client.VideoRentalStoreClient;
@@ -34,15 +42,13 @@ import com.tasos.sampleapi.common.dataobjects.RentalListDTO;
 import com.tasos.sampleapi.common.dataobjects.RentalResultDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsResultDTO;
-import com.tasos.sampleapi.server.VRSServer;
 import com.tasos.common.enums.FilmType;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { VRSServer.class })
-@WebAppConfiguration
-@IntegrationTest({ "spring.active.profiles=production", "spring.profiles: production", "vrs.server.host=localhost",
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = VRSClientTestingConfig.class)
+@TestPropertySource(properties ={ "spring.profiles.active=dev", "vrs.server.host=localhost",
         "vrs.server.port=9081" })
-@ActiveProfiles(profiles = { "production" })
+@ActiveProfiles(profiles = { "dev" })
 public class VRSApiTest {
 
     private Logger logger = (Logger) LoggerFactory.getLogger(VRSApiTest.class);
@@ -139,7 +145,7 @@ public class VRSApiTest {
         List<RentalDTO> manyRentals = new ArrayList<RentalDTO>();
         CustomerDTO savedCustomer = vrsClient.createCustomer(customer1);
         FilmDTO savedFilm = vrsClient.createFilm(movie1);
-        DateTime dateRented = DateTime.now();
+        Instant dateRented = Instant.now();
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
@@ -159,7 +165,7 @@ public class VRSApiTest {
         List<RentalDTO> manyRentals = new ArrayList<RentalDTO>();
         CustomerDTO savedCustomer = vrsClient.createCustomer(customer1);
         FilmDTO savedFilm = vrsClient.createFilm(movie1);
-        DateTime dateRented = DateTime.now();
+        Instant dateRented = Instant.now();
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
@@ -195,7 +201,7 @@ public class VRSApiTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(DateTime.now().minusDays(3));
+        rental1.setDateRented(LocalDateTime.now().minusDays(3).toInstant(ZoneOffset.UTC));
         manyRentals.add(rental1);
         RentalListDTO rentalListDTO = new RentalListDTO();
         rentalListDTO.setRentalList(manyRentals);
@@ -203,7 +209,7 @@ public class VRSApiTest {
 
         Set<Integer> filmsToReturn = new HashSet<Integer>();
         filmsToReturn.add(rental1.getFilmId());
-        DateTime dateReturned = DateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsDTO returnFilmsDTO = new ReturnFilmsDTO();
 
         returnFilmsDTO.setCustomerId(rental1.getCustomerId());
@@ -212,8 +218,9 @@ public class VRSApiTest {
 
         ReturnFilmsResultDTO returnResult = vrsClient.returnFilms(returnFilmsDTO);
 
-        Period period = new Period(rental1.getDateRented(), dateReturned);
-        int daysRented = period.getDays();
+//        Duration duration = Duration.between(rental1.getDateRented(), dateReturned);
+//        ChronoUnit.DAYS.between(rental1.getDateRented(),dateReturned);
+        int daysRented = (int)ChronoUnit.DAYS.between(rental1.getDateRented(),dateReturned);
         assertEquals(3, daysRented);
         double expectedSurcharges = 0.0;
         assertEquals(expectedSurcharges, returnResult.getSurcharges(), 0.01);
@@ -227,7 +234,7 @@ public class VRSApiTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(DateTime.now().minusDays(setTestDaysRented));
+        rental1.setDateRented(LocalDateTime.now().minusDays(setTestDaysRented).toInstant(ZoneOffset.UTC));
         List<RentalDTO> manyRentals = new ArrayList<RentalDTO>();
         manyRentals.add(rental1);
         RentalListDTO rentalListDTO = new RentalListDTO();
@@ -236,7 +243,7 @@ public class VRSApiTest {
 
         Set<Integer> filmsToReturn = new HashSet<Integer>();
         filmsToReturn.add(rental1.getFilmId());
-        DateTime dateReturned = DateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsDTO returnFilmsDTO = new ReturnFilmsDTO();
 
         returnFilmsDTO.setCustomerId(rental1.getCustomerId());

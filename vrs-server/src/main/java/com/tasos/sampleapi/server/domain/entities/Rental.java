@@ -1,19 +1,16 @@
 package com.tasos.sampleapi.server.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import com.tasos.sampleapi.common.dataobjects.RentalDTO;
+import org.springframework.data.jpa.repository.Temporal;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -42,11 +39,13 @@ public class Rental {
     @JoinColumn(name = "films_id", referencedColumnName = "id")
     private Film film;
 
-    @Column(name = "date_rented", columnDefinition = "datetime")
-    private LocalDateTime dateRented;
+    @Column(name = "date_rented", columnDefinition = "timestamp")
+    @Type(type="timestamp")
+    private Timestamp dateRented;
 
-    @Column(name = "return_date", columnDefinition = "datetime")
-    private LocalDateTime dateReturned;
+    @Column(name = "return_date", columnDefinition = "timestamp")
+    @Type(type="timestamp")
+    private Timestamp dateReturned;
 
     @Column(name = "price", columnDefinition = "FLOAT")
     private Double price;
@@ -73,20 +72,20 @@ public class Rental {
         this.film = film;
     }
 
-    public LocalDateTime getDateRented() {
-        return dateRented;
+    public Instant getDateRented() {
+        return dateRented.toInstant();
     }
 
-    public void setDateRented(LocalDateTime dateRented) {
-        this.dateRented = dateRented;
+    public void setDateRented(Instant dateRented) {
+        this.dateRented = Timestamp.from(dateRented);
     }
 
-    public LocalDateTime getDateReturned() {
-        return dateReturned;
+    public Instant getDateReturned() {
+        return dateReturned.toInstant();
     }
 
-    public void setDateReturned(LocalDateTime dateReturned) {
-        this.dateReturned = dateReturned;
+    public void setDateReturned(Instant dateReturned) {
+        this.dateReturned = Timestamp.from(dateReturned);
     }
 
     public Double getPrice() {
@@ -118,8 +117,8 @@ public class Rental {
         rentalDTO.setId(this.id);
         rentalDTO.setCustomerId(this.customer.getId());
         rentalDTO.setFilmId(this.film.getId());
-        rentalDTO.setDateRented(this.dateRented);
-        rentalDTO.setDateReturned(this.dateReturned);
+        rentalDTO.setDateRented(this.dateRented.toInstant());
+        rentalDTO.setDateReturned(this.dateReturned.toInstant());
         rentalDTO.setPrice(this.price);
         rentalDTO.setReturned(this.returned);
         return rentalDTO;

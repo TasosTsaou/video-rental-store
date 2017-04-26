@@ -1,12 +1,11 @@
 package com.tasos.sampleapi.server.services.impl;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.tasos.sampleapi.server.services.RentalManagementService;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -119,7 +118,7 @@ public class RentalManagementServiceImpl implements RentalManagementService {
     }
 
     @Override
-    public ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, LocalDateTime returnDate) {
+    public ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, Instant returnDate) {
 
         List<Rental> rentals = rentalRepo.findByFilmIdAndCustomerIdAndReturned(returnedFilmIds, customerId, false);
         double totalSurcharges = rentals.stream().map(rental -> {

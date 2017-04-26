@@ -11,7 +11,6 @@ import com.tasos.sampleapi.client.config.UrlRootInfo;
 /**
  * API Version configuration for testing.
  */
-@Profile("test")
 @Configuration
 @ComponentScan({ "com.tasos.sampleapi.client.impl", "com.tasos.sampleapi.client.config" })
 public class VRSClientTestingConfig {

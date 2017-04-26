@@ -4,6 +4,7 @@ import com.tasos.sampleapi.common.dataobjects.RentalDTO;
 import com.tasos.sampleapi.common.dataobjects.RentalResultDTO;
 import com.tasos.sampleapi.common.dataobjects.ReturnFilmsResultDTO;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,6 @@ public interface RentalManagementService {
 
     RentalResultDTO rentFilms(List<RentalDTO> filmsList);
 
-    ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, LocalDateTime returnDate);
+    ReturnFilmsResultDTO returnFilms(Set<Integer> returnedFilmIds, int customerId, Instant returnDate);
 
 }

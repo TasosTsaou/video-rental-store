@@ -3,8 +3,8 @@ package com.tasos.sampleapi.server.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.Set;
 import com.tasos.sampleapi.server.services.CustomerManagementService;
 import com.tasos.sampleapi.server.services.FilmManagementService;
 import com.tasos.sampleapi.server.services.RentalManagementService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,7 +135,7 @@ public class VRSServicesTest {
     public void testCreateRentalDTO() {
         CustomerDTO savedCustomer = customerService.createCustomer(customer1);
         FilmDTO savedFilm = filmService.createFilm(movie1);
-        LocalDateTime dateRented = LocalDateTime.now();
+        Instant dateRented = Instant.now();
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
@@ -143,7 +144,7 @@ public class VRSServicesTest {
         RentalDTO savedRental = rentalService.createRental(rental1);
         assertEquals(savedCustomer.getId(), savedRental.getCustomerId());
         assertEquals(40.0, savedRental.getPrice().doubleValue(), 0.01);
-        assertEquals(dateRented.plusDays(1), savedRental.getDateReturned());
+        assertEquals(dateRented.plus(Duration.ofDays(1)), savedRental.getDateReturned());
         CustomerDTO rentalCustomer = customerService.getCustomerById(savedRental.getCustomerId());
         assertEquals(2, rentalCustomer.getBonusPoints().intValue());
 
@@ -154,7 +155,7 @@ public class VRSServicesTest {
         List<RentalDTO> manyRentals = new ArrayList<RentalDTO>();
         CustomerDTO savedCustomer = customerService.createCustomer(customer1);
         FilmDTO savedFilm = filmService.createFilm(movie1);
-        LocalDateTime dateRented = LocalDateTime.now();
+        Instant dateRented = Instant.now();
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
@@ -173,7 +174,7 @@ public class VRSServicesTest {
         List<RentalDTO> manyRentals = new ArrayList<RentalDTO>();
         CustomerDTO savedCustomer = customerService.createCustomer(customer1);
         FilmDTO savedFilm = filmService.createFilm(movie1);
-        LocalDateTime dateRented = LocalDateTime.now();
+        Instant dateRented = Instant.now();
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
@@ -207,10 +208,10 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(3));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(3)));
         rental1.setPrice(2.0);
         RentalDTO savedRental = rentalService.createRental(rental1);
-        LocalDateTime dateReturned = LocalDateTime.now();
+        Instant dateReturned = Instant.now();
         savedRental.setDateReturned(dateReturned);
         RentalDTO updatedRental = rentalService.updateRental(savedRental);
         assertEquals(savedRental.getDateReturned(), updatedRental.getDateReturned());
@@ -224,7 +225,7 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(3));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(3)));
         RentalDTO savedRental = rentalService.createRental(rental1);
 
         RentalDTO foundRental = rentalService.getRentalById(savedRental.getId());
@@ -238,17 +239,18 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(3));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(3)));
         RentalDTO savedRental = rentalService.createRental(rental1);
 
         Set<Integer> filmsToReturn = new HashSet<Integer>();
         filmsToReturn.add(savedRental.getFilmId());
-        LocalDateTime dateReturned = LocalDateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsResultDTO returnResult = rentalService.returnFilms(filmsToReturn, savedRental.getCustomerId(),
                 dateReturned);
 
-        Period period = Period.between(savedRental.getDateRented().toLocalDate(), dateReturned.toLocalDate());
-        int daysRented = period.getDays();
+        int daysRented = (int) ChronoUnit.DAYS.between(savedRental.getDateRented(),dateReturned);
+//        Period period = Period.between(LocalDate.from(savedRental.getDateRented()), LocalDate.from(dateReturned));
+//        int daysRented = period.getDays();
         assertEquals(3, daysRented);
         double expectedSurcharges = 0.0;
         assertEquals(expectedSurcharges, returnResult.getSurcharges(), 0.01);
@@ -262,18 +264,19 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(setTestDaysRented));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(setTestDaysRented)));
         RentalDTO savedRental = rentalService.createRental(rental1);
         double initialPrice = savedRental.getPrice();
 
-        Set<Integer> filmsToReturn = new HashSet<Integer>();
+        Set<Integer> filmsToReturn = new HashSet<>();
         filmsToReturn.add(savedRental.getFilmId());
-        LocalDateTime dateReturned = LocalDateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsResultDTO returnResult = rentalService.returnFilms(filmsToReturn, savedRental.getCustomerId(),
                 dateReturned);
 
-        Period period = Period.between(savedRental.getDateRented().toLocalDate(), dateReturned.toLocalDate());
-        int daysRented = period.getDays();
+        int daysRented = (int) ChronoUnit.DAYS.between(savedRental.getDateRented(),dateReturned);
+//        Period period = Period.between(LocalDate.from(savedRental.getDateRented()), LocalDate.from(dateReturned));
+//        int daysRented = period.getDays();
         assertEquals(setTestDaysRented, daysRented);
         int rechargeIntervals = calcHelper.calculateSurchargeIntervals(calcHelper.getVrsProps()
                 .getDaysOnStartingPriceNewRelease(), calcHelper.getVrsProps().getRechargeIntervalNewRelease(),
@@ -291,18 +294,19 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(5));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(5)));
         RentalDTO savedRental = rentalService.createRental(rental1);
         double initialPrice = savedRental.getPrice();
 
         Set<Integer> filmsToReturn = new HashSet<Integer>();
         filmsToReturn.add(savedRental.getFilmId());
-        LocalDateTime dateReturned = LocalDateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsResultDTO returnResult = rentalService.returnFilms(filmsToReturn, savedRental.getCustomerId(),
                 dateReturned);
 
-        Period period = Period.between(savedRental.getDateRented().toLocalDate(), dateReturned.toLocalDate());
-        int daysRented = period.getDays();
+        int daysRented = (int) ChronoUnit.DAYS.between(savedRental.getDateRented(),dateReturned);
+//        Period period = Period.between(LocalDate.from(savedRental.getDateRented()), LocalDate.from(dateReturned));
+//        int daysRented = period.getDays();
         assertEquals(5, daysRented);
         int rechargeIntervals = calcHelper.calculateSurchargeIntervals(calcHelper.getVrsProps()
                 .getDaysOnStartingPriceRegularFilm(), calcHelper.getVrsProps().getRechargeIntervalRegularFilm(),
@@ -320,18 +324,19 @@ public class VRSServicesTest {
         rental1 = new RentalDTO();
         rental1.setCustomerId(savedCustomer.getId());
         rental1.setFilmId(savedFilm.getId());
-        rental1.setDateRented(LocalDateTime.now().minusDays(6));
+        rental1.setDateRented(Instant.now().minus(Duration.ofDays(6)));
         RentalDTO savedRental = rentalService.createRental(rental1);
         double initialPrice = savedRental.getPrice();
 
         Set<Integer> filmsToReturn = new HashSet<Integer>();
         filmsToReturn.add(savedRental.getFilmId());
-        LocalDateTime dateReturned = LocalDateTime.now();
+        Instant dateReturned = Instant.now();
         ReturnFilmsResultDTO returnResult = rentalService.returnFilms(filmsToReturn, savedRental.getCustomerId(),
                 dateReturned);
 
-        Period period = Period.between(savedRental.getDateRented().toLocalDate(), dateReturned.toLocalDate());
-        int daysRented = period.getDays();
+        int daysRented = (int) ChronoUnit.DAYS.between(savedRental.getDateRented(),dateReturned);
+//        Period period = Period.between(LocalDate.from(savedRental.getDateRented()), LocalDate.from(dateReturned));
+//        int daysRented = period.getDays();
         assertEquals(6, daysRented);
         int rechargeIntervals = calcHelper.calculateSurchargeIntervals(calcHelper.getVrsProps()
                 .getDaysOnStartingPriceOldFilm(), calcHelper.getVrsProps().getRechargeIntervalOldFilm(), daysRented);

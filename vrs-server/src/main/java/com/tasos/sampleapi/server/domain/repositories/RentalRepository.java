@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.tasos.sampleapi.server.domain.entities.Rental;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RentalRepository extends PagingAndSortingRepository<Rental, Integer> {
 
     List<Rental> findByCustomerId(Integer customerId);

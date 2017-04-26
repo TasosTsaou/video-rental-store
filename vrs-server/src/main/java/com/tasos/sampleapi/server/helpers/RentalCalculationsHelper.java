@@ -7,8 +7,8 @@ import com.tasos.sampleapi.server.config.VideoRentalStoreProperties;
 import com.tasos.sampleapi.server.domain.entities.Film;
 import com.tasos.common.enums.FilmType;
 
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 
 
 public class RentalCalculationsHelper {
@@ -41,8 +41,8 @@ public class RentalCalculationsHelper {
         double additionalCost = 0.0;
         String filmType = film.getType();
         // Find the total days the film has been rented:
-        Period period = Period.between(rentalDTO.getDateRented().toLocalDate(), rentalDTO.getDateReturned().toLocalDate());
-        int daysRented = period.getDays();
+        int daysRented = (int) ChronoUnit.DAYS.between(rentalDTO.getDateRented(),rentalDTO.getDateReturned());
+
         // calculate the price based on film type and days rented:
         if (filmType.equalsIgnoreCase(FilmType.newRelease.name())) {
             basicCost = vrsProps.getPremiumPrice();
@@ -77,15 +77,15 @@ public class RentalCalculationsHelper {
         return (int) rechargeIntervals;
     }
 
-    public LocalDateTime calculateRegularReturnDate(RentalDTO rentalDTO, Film film) {
-        LocalDateTime regularReturnDate = null;
+    public Instant calculateRegularReturnDate(RentalDTO rentalDTO, Film film) {
+        Instant regularReturnDate = null;
         String filmType = film.getType();
         if (filmType.equalsIgnoreCase(FilmType.newRelease.name())) {
-            regularReturnDate = rentalDTO.getDateRented().plusDays(vrsProps.getDaysOnStartingPriceNewRelease());
+            regularReturnDate = rentalDTO.getDateRented().plus(Duration.ofDays(vrsProps.getDaysOnStartingPriceNewRelease()));
         } else if (filmType.equalsIgnoreCase(FilmType.regularFilm.name())) {
-            regularReturnDate = rentalDTO.getDateRented().plusDays(vrsProps.getDaysOnStartingPriceRegularFilm());
+            regularReturnDate = rentalDTO.getDateRented().plus(Duration.ofDays(vrsProps.getDaysOnStartingPriceRegularFilm()));
         } else if (filmType.equalsIgnoreCase(FilmType.oldFilm.name())) {
-            regularReturnDate = rentalDTO.getDateRented().plusDays(vrsProps.getDaysOnStartingPriceOldFilm());
+            regularReturnDate = rentalDTO.getDateRented().plus(Duration.ofDays(vrsProps.getDaysOnStartingPriceOldFilm()));
         } else {
             throw new RuntimeException("The film type of the rental " + rentalDTO.getId() + "is not expected.");
         }
